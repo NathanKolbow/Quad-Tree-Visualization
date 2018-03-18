@@ -12,6 +12,7 @@ public class Particle {
     public int height;
     public double dx;
     public double dy;
+	private int count = 0;
 
     public Particle(int x, int y, int width, int height) {
 	this.x = x;
@@ -27,6 +28,7 @@ public class Particle {
     }
 
     public void move() {
+		if(count != 0) count--;
 	x += dx;
 	y += dy;
 
@@ -50,8 +52,9 @@ public class Particle {
     }
     
     public void collide() {
-	color = (color == Color.RED) ? Color.CYAN : Color.RED;
-	x -= (int) (15 * dx);
-	y -= (int) (15 * dy);
+		if(count <= 0) {
+			Main.splash(x, y);
+			count = 50;
+		}
     }
 }

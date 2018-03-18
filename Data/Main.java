@@ -20,9 +20,11 @@ public class Main extends JComponent implements ActionListener, MouseListener {
     public static int width = 1920;
     public static int height = 1080;
     public static ArrayList<Particle> particleList = new ArrayList<Particle>();
+	public static ArrayList<Splash> splashList = new ArrayList<Splash>();
     public static QuadTree root;
     public static JFrame frame;
     public static boolean drawTrees = true;
+	private final static int pCount = 10;
 
     public static void main(String[] args) {
 	frame = new JFrame("Quadtrees");
@@ -37,7 +39,7 @@ public class Main extends JComponent implements ActionListener, MouseListener {
 	frame.setFocusable(true);
 
 	Random r = new Random();
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < pCount; i++) {
 	    int x = r.nextInt(width);
 	    int y = r.nextInt(height);
 	    particleList.add(new Particle(x, y, 20, 20));
@@ -46,18 +48,34 @@ public class Main extends JComponent implements ActionListener, MouseListener {
 	Timer timer = new Timer(10, new Main());
 	timer.start();
     }
-
+	
     @Override
     public void paintComponent(Graphics g) {
 	
 	for (Particle p : particleList)
 	    p.draw(g);
+	
+	ArrayList<Splash> toRemove = new ArrayList<Splash>();
+	for(Splash s : splashList) {
+		if(s.getTime() >= 200) {
+			toRemove.add(s);
+		} else {
+			s.draw(g);
+		}
+	}
+	for(Splash s : toRemove) {
+		splashList.remove(s);
+	}
 
 	if (root != null && drawTrees)
 	    root.draw(g);
 	
     }
 
+	public static void splash(int x, int y) {
+		splashList.add(new Splash(x, y));
+	}
+	
     @Override
     public void actionPerformed(ActionEvent arg0) {
 	for (Particle p : particleList) {
